@@ -1,0 +1,122 @@
+syntax = "proto3";
+
+package grpc;
+
+import "google/protobuf/timestamp.proto";
+import "googleapis/google/api/annotations.proto";
+
+option go_package = "./pb";
+
+message User {
+  int64 id = 1;
+  string name = 2;
+  string surname = 3;
+  string email = 4;
+  string password = 5;
+  google.protobuf.Timestamp created_at = 6;
+  string role = 7;
+}
+
+message CreateUserRequest {
+  string name = 1;
+  string surname = 2;
+  string email = 3;
+  string password = 4;
+  string role = 5;
+}
+
+message UpdateUserRequest {
+  int64 id = 1;
+  string name = 2;
+  string surname = 3;
+  string email = 4;
+  string password = 5;
+  string role = 6;
+}
+
+message GetUserRequest {
+  int64 id = 1;
+}
+
+message GetUserResponse {
+  User user = 1;
+}
+
+message GetUserRequestByEmail {
+  string email = 1;
+}
+
+message GetUserResponseByEmail {
+  User user = 1;
+}
+
+message LoginRequest {
+  string email = 1;
+  string password = 2;
+}
+
+message LoginResponse {
+  string jwt = 1;
+}
+
+message ListUsersRequest {
+  int32 page_number = 1;
+  int32 page_size = 2;
+}
+
+message ListUsersResponse {
+  repeated User users = 1;
+}
+
+message DeleteUserRequest {
+  int64 id = 1;
+}
+
+message DecryptJwtRequest {
+  string jwt = 1;
+}
+
+message DecryptJwtResponse {
+  string email = 1;
+}
+
+service UserService {
+  rpc CreateUser (CreateUserRequest) returns (User) {
+    option (google.api.http) = {
+      post: "/v1/users"
+      body: "*"
+    };
+  }
+  rpc UpdateUser (UpdateUserRequest) returns (User) {
+    option (google.api.http) = {
+      put: "/v1/users/{id}"
+      body: "*"
+    };
+  }
+  rpc GetUserByEmail (GetUserRequestByEmail) returns (User) {
+    option (google.api.http) = {
+      get: "/v1/users/{email}"
+    };
+  }
+  rpc ListUsers (ListUsersRequest) returns (ListUsersResponse) {
+    option (google.api.http) = {
+      get: "/v1/users"
+    };
+  }
+  rpc DeleteUser (DeleteUserRequest) returns (User) {
+    option (google.api.http) = {
+      delete: "/v1/users/{id}"
+    };
+  }
+  rpc Login (LoginRequest) returns (LoginResponse) {
+    option (google.api.http) = {
+      post: "/v1/login"
+      body: "*"
+    };
+  }
+  rpc DecryptJwt (DecryptJwtRequest) returns (DecryptJwtResponse) {
+    option (google.api.http) = {
+      get: "/v1/users/token/{jwt}"
+    };
+  }
+}
