@@ -1,0 +1,80 @@
+syntax = "proto3";
+
+package grpc;
+
+import "google/protobuf/timestamp.proto";
+import "googleapis/google/api/annotations.proto";
+
+option go_package = "./pb";
+
+message Assignment {
+  int64 id = 1;
+  string subject_name = 2;
+  string assignment_name = 3;
+  google.protobuf.Timestamp created_at = 4;
+}
+
+message CreateAssignmentRequest {
+  string subject_name = 1;
+  string assignment_name = 2;
+  string jwt = 3;
+}
+
+message UpdateAssignmentRequest {
+  int64 id = 1;
+  string subject_name = 2;
+  string assignment_name = 3;
+  string jwt = 4;
+}
+
+message GetAssignmentRequest {
+  int64 id = 1;
+}
+
+message GetAssignmentResponse {
+  Assignment assignment = 1;
+}
+
+message ListAssignmentsRequest {
+  int32 page_number = 1;
+  int32 page_size = 2;
+}
+
+message ListAssignmentsResponse {
+  repeated Assignment assignments = 1;
+}
+
+message DeleteAssignmentRequest {
+  int64 id = 1;
+  string jwt = 2;
+}
+
+service AssignmentService {
+  rpc CreateAssignment (CreateAssignmentRequest) returns (Assignment) {
+    option (google.api.http) = {
+      post: "/v1/assignments"
+      body: "*"
+    };
+  }
+  rpc UpdateAssignment (UpdateAssignmentRequest) returns (Assignment) {
+    option (google.api.http) = {
+      put: "/v1/assignments/{id}"
+      body: "*"
+    };
+  }
+  rpc GetAssignment (GetAssignmentRequest) returns (GetAssignmentResponse) {
+    option (google.api.http) = {
+      get: "/v1/assignments/{id}"
+    };
+  }
+  rpc ListAssignments (ListAssignmentsRequest) returns (ListAssignmentsResponse) {
+    option (google.api.http) = {
+      get: "/v1/assignments"
+    };
+  }
+  rpc DeleteAssignment (DeleteAssignmentRequest) returns (Assignment) {
+    option (google.api.http) = {
+      delete: "/v1/assignments/{id}"
+    };
+  }
+}
