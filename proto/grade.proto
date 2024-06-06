@@ -1,0 +1,81 @@
+syntax = "proto3";
+
+package grpc;
+
+import "google/protobuf/timestamp.proto";
+import "googleapis/google/api/annotations.proto";
+
+option go_package = "./pb";
+
+message Grade {
+  int64 id = 1;
+  int64 user_id = 2;
+  int64 assignment_id = 3;
+  int32 grade = 4;
+  google.protobuf.Timestamp created_at = 5;
+}
+
+message CreateGradeRequest {
+  int64 user_id = 1;
+  int64 assignment_id = 2;
+  int32 grade = 3;
+  string jwt = 4;
+}
+
+message UpdateGradeRequest {
+  int64 id = 1;
+  int32 grade = 2;
+  string jwt = 3;
+}
+
+message GetGradeRequest {
+  int64 id = 1;
+}
+
+message GetGradeResponse {
+  Grade grade = 1;
+}
+
+message ListGradesRequest {
+  int32 page_number = 1;
+  int32 page_size = 2;
+}
+
+message ListGradesResponse {
+  repeated Grade grades = 1;
+}
+
+message DeleteGradeRequest {
+  int64 id = 1;
+  string jwt = 2;
+}
+
+service GradeService {
+  rpc CreateGrade (CreateGradeRequest) returns (Grade) {
+    option (google.api.http) = {
+      post: "/v1/grades"
+      body: "*"
+    };
+  }
+  rpc UpdateGrade (UpdateGradeRequest) returns (Grade) {
+    option (google.api.http) = {
+      put: "/v1/grades/{id}"
+      body: "*"
+    };
+  }
+  rpc GetGrade (GetGradeRequest) returns (GetGradeResponse) {
+    option (google.api.http) = {
+      get: "/v1/grades/{id}"
+    };
+  }
+  rpc ListGrades (ListGradesRequest) returns (ListGradesResponse) {
+    option (google.api.http) = {
+      get: "/v1/grades"
+    };
+  }
+  rpc DeleteGrade (DeleteGradeRequest) returns (Grade) {
+    option (google.api.http) = {
+      delete: "/v1/grades/{id}/jwt/{jwt}"
+    };
+  }
+}
