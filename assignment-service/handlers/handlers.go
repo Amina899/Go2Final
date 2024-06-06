@@ -21,6 +21,9 @@ func NewAssignmentHandler(assignmentRepo repository.AssignmentRepository) *Assig
 }
 
 func (h *AssignmentHandler) CreateAssignment(ctx context.Context, req *pb.CreateAssignmentRequest) (*pb.Assignment, error) {
+	log.Println("CreateAssignment: Received request")
+	defer log.Println("CreateAssignment: Request processed")
+
 	userConn, err := grpc.Dial("localhost:50053", grpc.WithInsecure())
 	if err != nil {
 		return nil, err
@@ -55,6 +58,9 @@ func (h *AssignmentHandler) CreateAssignment(ctx context.Context, req *pb.Create
 }
 
 func (h *AssignmentHandler) UpdateAssignment(ctx context.Context, req *pb.UpdateAssignmentRequest) (*pb.Assignment, error) {
+	log.Println("UpdateAssignment: Received request")
+	defer log.Println("UpdateAssignment: Request processed")
+
 	userConn, err := grpc.Dial("localhost:50053", grpc.WithInsecure())
 	if err != nil {
 		return nil, err
@@ -89,6 +95,9 @@ func (h *AssignmentHandler) UpdateAssignment(ctx context.Context, req *pb.Update
 }
 
 func (h *AssignmentHandler) GetAssignment(ctx context.Context, req *pb.GetAssignmentRequest) (*pb.GetAssignmentResponse, error) {
+	log.Println("GetAssignment: Received request")
+	defer log.Println("GetAssignment: Request processed")
+
 	assignment, err := h.assignmentRepo.GetAssignment(ctx, req)
 	if err != nil {
 		log.Printf("Error getting assignment: %v", err)
@@ -98,6 +107,9 @@ func (h *AssignmentHandler) GetAssignment(ctx context.Context, req *pb.GetAssign
 }
 
 func (h *AssignmentHandler) ListAssignments(ctx context.Context, req *pb.ListAssignmentsRequest) (*pb.ListAssignmentsResponse, error) {
+	log.Println("ListAssignments: Received request")
+	defer log.Println("ListAssignments: Request processed")
+
 	assignments, err := h.assignmentRepo.ListAssignments(ctx)
 	if err != nil {
 		log.Printf("Error listing assignments: %v", err)
@@ -107,6 +119,9 @@ func (h *AssignmentHandler) ListAssignments(ctx context.Context, req *pb.ListAss
 }
 
 func (h *AssignmentHandler) DeleteAssignment(ctx context.Context, req *pb.DeleteAssignmentRequest) (*pb.Assignment, error) {
+	log.Println("DeleteAssignment: Received request")
+	defer log.Println("DeleteAssignment: Request processed")
+
 	userConn, err := grpc.Dial("localhost:50053", grpc.WithInsecure())
 	if err != nil {
 		return nil, err

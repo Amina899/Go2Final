@@ -20,6 +20,9 @@ func NewGradeHandler(gradeRepo GradeRepository) *GradesHandler {
 }
 
 func (h *GradesHandler) CreateGrade(ctx context.Context, req *pb.CreateGradeRequest) (*pb.Grade, error) {
+	log.Println("CreateGrade: Received request")
+	defer log.Println("CreateGrade: Request processed")
+
 	userConn, err := grpc.Dial("localhost:50053", grpc.WithInsecure())
 	if err != nil {
 		return nil, err
@@ -41,7 +44,7 @@ func (h *GradesHandler) CreateGrade(ctx context.Context, req *pb.CreateGradeRequ
 	userDataRes, err := userClient.GetUserByEmail(ctx, userDataReq)
 
 	if userDataRes.Role != "TEACHER" {
-		log.Printf("You don't have permisson!: %v", err)
+		log.Printf("CreateGrade: User does not have permission: %v", userEmail)
 		return nil, errors.New("you don't have permisson")
 	}
 
@@ -49,10 +52,15 @@ func (h *GradesHandler) CreateGrade(ctx context.Context, req *pb.CreateGradeRequ
 	if err != nil {
 		return nil, err
 	}
+
+	log.Println("CreateGrade: Grade created successfully")
 	return createdGrade, nil
 }
 
 func (h *GradesHandler) UpdateGrade(ctx context.Context, req *pb.UpdateGradeRequest) (*pb.Grade, error) {
+	log.Println("UpdateGrade: Received request")
+	defer log.Println("UpdateGrade: Request processed")
+
 	userConn, err := grpc.Dial("localhost:50053", grpc.WithInsecure())
 	if err != nil {
 		return nil, err
@@ -86,6 +94,9 @@ func (h *GradesHandler) UpdateGrade(ctx context.Context, req *pb.UpdateGradeRequ
 }
 
 func (h *GradesHandler) GetGrade(ctx context.Context, req *pb.GetGradeRequest) (*pb.GetGradeResponse, error) {
+	log.Println("GetGrade: Received request")
+	defer log.Println("GetGrade: Request processed")
+
 	grade, err := h.gradeRepo.GetGrade(ctx, req)
 	if err != nil {
 		return nil, err
@@ -94,6 +105,9 @@ func (h *GradesHandler) GetGrade(ctx context.Context, req *pb.GetGradeRequest) (
 }
 
 func (h *GradesHandler) ListGrades(ctx context.Context, req *pb.ListGradesRequest) (*pb.ListGradesResponse, error) {
+	log.Println("ListGrades: Received request")
+	defer log.Println("ListGrades: Request processed")
+
 	grades, err := h.gradeRepo.ListGrades(ctx, req)
 	if err != nil {
 		return nil, err
@@ -102,6 +116,9 @@ func (h *GradesHandler) ListGrades(ctx context.Context, req *pb.ListGradesReques
 }
 
 func (h *GradesHandler) DeleteGrade(ctx context.Context, req *pb.DeleteGradeRequest) (*pb.Grade, error) {
+	log.Println("DeleteGrade: Received request")
+	defer log.Println("DeleteGrade: Request processed")
+
 	userConn, err := grpc.Dial("localhost:50053", grpc.WithInsecure())
 	if err != nil {
 		return nil, err
